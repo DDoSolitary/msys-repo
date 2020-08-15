@@ -1,0 +1,22 @@
+_realname=win32yank
+pkgbase=mingw-w64-$_realname
+pkgname=$MINGW_PACKAGE_PREFIX-$_realname
+pkgver=0.0.4
+pkgrel=1
+pkgdesc='A clipboard tool for Windows (mingw-w64)'
+arch=(any)
+url=https://github.com/equalsraf/win32yank
+license=(ISC)
+makedepends=($MINGW_PACKAGE_PREFIX-rust)
+source=(https://github.com/equalsraf/$_realname/archive/v$pkgver/$_realname-v$pkgver.tar.gz)
+sha512sums=(3e3aab5ec1aa6d731bc496a4d283a3a042fd6216f069eee774ea2dfedd04c8aba73ab4d73c15c206f21fafb93061743476ebd7c1e762d47199ecc06691168e43)
+
+build() {
+	cd $_realname-$pkgver
+	cargo build --release
+}
+
+package() {
+	cd $_realname-$pkgver
+	install -Dm755 target/release/win32yank.exe -t "$pkgdir"$MINGW_PREFIX/bin
+}
