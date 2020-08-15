@@ -21,7 +21,7 @@ prepare() {
 
 build() {
 	cd lpeg-$pkgver
-	make LUADIR=/usr/include/luajit-2.0
+	make LUADIR=/usr/include/luajit-2.1
 }
 
 package() {
