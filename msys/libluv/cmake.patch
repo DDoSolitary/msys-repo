@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3230fdd..035d773 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -106,7 +106,7 @@ else (LUA)
+     if (USE_LUAJIT)
+       find_package(LuaJIT REQUIRED)
+       include_directories(${LUAJIT_INCLUDE_DIR})
+-      link_directories(${LUAJIT_LIBRARIES})
++      link_libraries(${LUAJIT_LIBRARIES})
+     else (USE_LUAJIT)
+       find_package(Lua REQUIRED)
+       include_directories(${LUA_INCLUDE_DIR})
+@@ -141,9 +141,8 @@ if (BUILD_STATIC_LIBS)
+ endif (BUILD_STATIC_LIBS)
+ if (BUILD_SHARED_LIBS)
+   add_library(libluv SHARED src/luv.c)
+-  set_target_properties(libluv PROPERTIES PREFIX "")
+   set_target_properties(libluv
+-    PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR})
++  PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR} OUTPUT_NAME luv)
+   list(APPEND ACTIVE_TARGETS "libluv")
+ endif (BUILD_SHARED_LIBS)
+ 
+@@ -243,6 +242,7 @@ if (CMAKE_INSTALL_PREFIX)
+   endif (BUILD_STATIC_LIBS)
+   if (BUILD_SHARED_LIBS)
+     install(TARGETS libluv
++      RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
+       ARCHIVE DESTINATION "${SHAREDLIBS_INSTALL_LIB_DIR}"
+       LIBRARY DESTINATION "${SHAREDLIBS_INSTALL_LIB_DIR}"
+     )

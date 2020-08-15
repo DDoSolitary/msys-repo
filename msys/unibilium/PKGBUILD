@@ -1,0 +1,34 @@
+pkgbase=unibilium
+pkgname=($pkgbase $pkgbase-devel)
+pkgver=2.1.0
+pkgrel=1
+pkgdesc='A terminfo parsing library'
+arch=(i686 x86_64)
+url=https://github.com/neovim/unibilium
+license=(LGPL3)
+source=($pkgbase-$pkgver.tar.gz::https://github.com/neovim/$pkgbase/archive/v$pkgver.tar.gz)
+sha512sums=(c0074ff8431f82c92072b8c0c9d3cf38d759b4de996b168c6ab00e475b0a6204d9c29b0a6e48e62dd4fa4898f82246150ef7cd5e246893d2c225c50ec4d4ac68)
+
+build() {
+	cd $pkgbase-$pkgver
+	make PREFIX=/usr LDFLAGS=-no-undefined
+}
+
+check() {
+	cd $pkgbase-$pkgver
+	make test
+}
+
+package_unibilium() {
+	cd $pkgbase-$pkgver
+	make install PREFIX=/usr DESTDIR="$pkgdir"
+	rm -r "$pkgdir"/usr/{include,lib}
+}
+
+package_unibilium-devel() {
+	depends=($pkgbase=$pkgver)
+
+	cd $pkgbase-$pkgver
+	make install PREFIX=/usr DESTDIR="$pkgdir"
+	rm -r "$pkgdir"/usr/{bin,share}
+}

@@ -1,0 +1,32 @@
+pkgbase=libvterm
+pkgname=($pkgbase $pkgbase-devel)
+_git=65dbda
+pkgver=0.1.3.git1.${_git}
+pkgrel=1
+pkgdesc='Abstract library implementation of a VT220/xterm/ECMA-48 terminal emulator'
+arch=(i686 x86_64)
+url=https://github.com/neovim/libvterm
+license=(MIT)
+makedepends=(git)
+source=(git+https://github.com/neovim/libvterm.git#commit=${_git})
+sha512sums=(SKIP)
+
+build() {
+	cd $pkgbase
+	make PREFIX=/usr LDFLAGS=-no-undefined
+}
+
+package_libvterm() {
+	cd $pkgbase
+	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+	rm -r "$pkgdir"/usr/{include,lib}
+}
+
+package_libvterm-devel() {
+	depends=($pkgbase=$pkgver)
+
+	cd $pkgbase
+	make PREFIX=/usr DESTDIR="$pkgdir" install
+	rm -r "$pkgdir"/usr/bin
+}

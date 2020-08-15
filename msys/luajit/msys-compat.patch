@@ -1,0 +1,149 @@
+diff --git a/etc/luajit.pc b/etc/luajit.pc
+index a78f174..d491ed2 100644
+--- a/etc/luajit.pc
++++ b/etc/luajit.pc
+@@ -12,8 +12,8 @@ libdir=${exec_prefix}/${multilib}
+ libname=luajit-${abiver}
+ includedir=${prefix}/include/luajit-${majver}.${minver}
+ 
+-INSTALL_LMOD=${prefix}/share/lua/${abiver}
+-INSTALL_CMOD=${prefix}/${multilib}/lua/${abiver}
++INSTALL_LMOD=${prefix}/share/luajit/${abiver}
++INSTALL_CMOD=${prefix}/${multilib}/luajit/${abiver}
+ 
+ Name: LuaJIT
+ Description: Just-in-time compiler for Lua
+diff --git a/src/Makefile b/src/Makefile
+index f56465d..51cc07d 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -169,6 +169,10 @@ else
+     HOST_SYS= Windows
+     HOST_MSYS= cygwin
+   endif
++  ifneq (,$(findstring MSYS,$(HOST_SYS)))
++    HOST_SYS= Windows
++    HOST_MSYS= msys
++  endif
+ endif
+ 
+ ##############################################################################
+@@ -528,7 +532,11 @@ ifeq (Windows,$(TARGET_SYS))
+   ifeq (cygwin,$(HOST_MSYS))
+     LUAJIT_SO= cyg$(TARGET_DLLNAME)
+   else
+-    LUAJIT_SO= $(TARGET_DLLNAME)
++    ifeq (msys,$(HOST_MSYS))
++      LUAJIT_SO= msys-$(TARGET_DLLNAME)
++    else
++      LUAJIT_SO= $(TARGET_DLLNAME)
++    endif
+   endif
+   # Mixed mode is not supported on Windows. And static mode doesn't work well.
+   # C modules cannot be loaded, because they bind to lua51.dll.
+diff --git a/src/lj_arch.h b/src/lj_arch.h
+index c8d7138..3a0a2da 100644
+--- a/src/lj_arch.h
++++ b/src/lj_arch.h
+@@ -79,6 +79,9 @@
+ #elif defined(__CYGWIN__)
+ #define LJ_TARGET_CYGWIN	1
+ #define LUAJIT_OS	LUAJIT_OS_POSIX
++#elif defined(__MSYS__)
++#define LJ_TARGET_MSYS	1
++#define LUAJIT_OS	LUAJIT_OS_POSIX
+ #else
+ #define LUAJIT_OS	LUAJIT_OS_OTHER
+ #endif
+@@ -146,7 +149,7 @@
+ #define LJ_ARCH_NAME		"x86"
+ #define LJ_ARCH_BITS		32
+ #define LJ_ARCH_ENDIAN		LUAJIT_LE
+-#if LJ_TARGET_WINDOWS || LJ_TARGET_CYGWIN
++#if LJ_TARGET_WINDOWS || LJ_TARGET_CYGWIN || LJ_TARGET_MSYS
+ #define LJ_ABI_WIN		1
+ #else
+ #define LJ_ABI_WIN		0
+@@ -164,7 +167,7 @@
+ #define LJ_ARCH_NAME		"x64"
+ #define LJ_ARCH_BITS		64
+ #define LJ_ARCH_ENDIAN		LUAJIT_LE
+-#if LJ_TARGET_WINDOWS || LJ_TARGET_CYGWIN
++#if LJ_TARGET_WINDOWS || LJ_TARGET_CYGWIN || LJ_TARGET_MSYS
+ #define LJ_ABI_WIN		1
+ #else
+ #define LJ_ABI_WIN		0
+diff --git a/src/lj_clib.c b/src/lj_clib.c
+index 6142659..e6ee49f 100644
+--- a/src/lj_clib.c
++++ b/src/lj_clib.c
+@@ -42,13 +42,15 @@ LJ_NORET LJ_NOINLINE static void clib_error_(lua_State *L)
+ 
+ #if LJ_TARGET_CYGWIN
+ #define CLIB_SOPREFIX	"cyg"
++#elif LJ_TARGET_MSYS
++#define CLIB_SOPREFIX	"msys-"
+ #else
+ #define CLIB_SOPREFIX	"lib"
+ #endif
+ 
+ #if LJ_TARGET_OSX
+ #define CLIB_SOEXT	"%s.dylib"
+-#elif LJ_TARGET_CYGWIN
++#elif LJ_TARGET_CYGWIN || LJ_TARGET_MSYS
+ #define CLIB_SOEXT	"%s.dll"
+ #else
+ #define CLIB_SOEXT	"%s.so"
+@@ -57,14 +59,14 @@ LJ_NORET LJ_NOINLINE static void clib_error_(lua_State *L)
+ static const char *clib_extname(lua_State *L, const char *name)
+ {
+   if (!strchr(name, '/')
+-#if LJ_TARGET_CYGWIN
++#if LJ_TARGET_CYGWIN || LJ_TARGET_MSYS
+       && !strchr(name, '\\')
+ #endif
+      ) {
+     if (!strchr(name, '.')) {
+       name = lj_strfmt_pushf(L, CLIB_SOEXT, name);
+       L->top--;
+-#if LJ_TARGET_CYGWIN
++#if LJ_TARGET_CYGWIN || LJ_TARGET_MSYS
+     } else {
+       return name;
+ #endif
+diff --git a/src/luaconf.h b/src/luaconf.h
+index c2d29d9..01936ec 100644
+--- a/src/luaconf.h
++++ b/src/luaconf.h
+@@ -36,7 +36,7 @@
+ #define LUA_LMULTILIB	"lib"
+ #endif
+ #define LUA_LROOT	"/usr/local"
+-#define LUA_LUADIR	"/lua/5.1/"
++#define LUA_LUADIR	"/luajit/5.1/"
+ #define LUA_LJDIR	"/luajit-2.1.0-beta3/"
+ 
+ #ifdef LUA_ROOT
+@@ -44,7 +44,7 @@
+ #define LUA_RLDIR	LUA_ROOT "/share" LUA_LUADIR
+ #define LUA_RCDIR	LUA_ROOT "/" LUA_MULTILIB LUA_LUADIR
+ #define LUA_RLPATH	";" LUA_RLDIR "?.lua;" LUA_RLDIR "?/init.lua"
+-#define LUA_RCPATH	";" LUA_RCDIR "?.so"
++#define LUA_RCPATH	";" LUA_RCDIR "?.dll"
+ #else
+ #define LUA_JROOT	LUA_LROOT
+ #define LUA_RLPATH
+@@ -55,11 +55,11 @@
+ #define LUA_LLDIR	LUA_LROOT "/share" LUA_LUADIR
+ #define LUA_LCDIR	LUA_LROOT "/" LUA_LMULTILIB LUA_LUADIR
+ #define LUA_LLPATH	";" LUA_LLDIR "?.lua;" LUA_LLDIR "?/init.lua"
+-#define LUA_LCPATH1	";" LUA_LCDIR "?.so"
++#define LUA_LCPATH1	";" LUA_LCDIR "?.dll"
+ #define LUA_LCPATH2	";" LUA_LCDIR "loadall.so"
+ 
+ #define LUA_PATH_DEFAULT	"./?.lua" LUA_JPATH LUA_LLPATH LUA_RLPATH
+-#define LUA_CPATH_DEFAULT	"./?.so" LUA_LCPATH1 LUA_RCPATH LUA_LCPATH2
++#define LUA_CPATH_DEFAULT	"./?.dll" LUA_LCPATH1 LUA_RCPATH LUA_LCPATH2
+ #endif
+ 
+ /* Environment variable names for path overrides and initialization code. */

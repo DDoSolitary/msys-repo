@@ -1,0 +1,48 @@
+pkgbase=libluv
+pkgname=($pkgbase $pkgbase-devel)
+pkgver=1.36.0
+pkgrel=1
+pkgdesc='Bare libuv bindings for lua'
+arch=(i686 x86_64)
+url=https://github.com/luvit/luv
+license=(Apache)
+makedepends=(cmake libuv-devel luajit-devel)
+source=(
+	https://github.com/luvit/luv/releases/download/${pkgver}-0/luv-${pkgver}-0.tar.gz
+	cmake.patch)
+sha512sums=(
+	9972d82bacdcf528d95047f3f2cfbceb523f6d6f5782e577b24cdd25f1292df745d3fb116b6fbd376d797df47c378ad25d5b673044d9ab5678af6e5fef5eca49
+	2e9a3c3a59c8ae6b0c827dd07f9af21065b0659930fee9cca1b08d4a9c171c0823deebd5a608a41cb3446bc2ad980c7ac5f5bbd8dbc91e033486e8b46f09986c)
+
+prepare() {
+	cd luv-$pkgver-0
+	patch -Np1 -i "$srcdir"/cmake.patch
+}
+
+build() {
+	cd luv-$pkgver-0
+	cmake . \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DWITH_SHARED_LIBUV=ON \
+		-DLUA_BUILD_TYPE=System \
+		-DBUILD_MODULE=OFF \
+		-DBUILD_SHARED_LIBS=ON \
+		-DCMAKE_INSTALL_PREFIX=/usr
+	make
+}
+
+package_libluv() {
+	depends=(luajit libuv)
+
+	cd luv-$pkgver-0
+	make DESTDIR="$pkgdir" install
+	rm -r "$pkgdir"/usr/{include,lib}
+}
+
+package_libluv-devel() {
+	depends=($pkgbase=$pkgver)
+
+	cd luv-$pkgver-0
+	make DESTDIR="$pkgdir" install
+	rm -r "$pkgdir"/usr/bin
+}

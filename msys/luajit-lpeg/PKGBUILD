@@ -1,0 +1,31 @@
+pkgname=luajit-lpeg
+pkgver=1.0.2
+pkgrel=1
+arch=(i686 x86_64)
+url=http://www.inf.puc-rio.br/~roberto/lpeg
+license=(MIT)
+depends=(luajit)
+makedepends=(luajit-devel)
+source=(http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-$pkgver.tar.gz)
+sha512sums=(110527ddf9f8e5e8a80ef0ae8847c8ba8cd2597dba3bfe2865cba9af60daafbb885f21e74231952f5ab793d021e050b482066a821c6954d52090a5eae77e9814)
+
+prepare() {
+	cd lpeg-$pkgver
+	sed -i \
+		-e 's/^CFLAGS =/CFLAGS +=/' \
+		-e 's/^COPT =/# COPT =/' \
+		-e 's/-o lpeg.so$/-o lpeg.so -lluajit-5.1/' \
+		-e 's/\.so/.dll/g' \
+		makefile
+}
+
+build() {
+	cd lpeg-$pkgver
+	make LUADIR=/usr/include/luajit-2.0
+}
+
+package() {
+	cd lpeg-$pkgver
+	install -Dm755 lpeg.dll "$pkgdir"/usr/lib/luajit/5.1/lpeg.dll
+	install -Dm644 re.lua "$pkgdir"/usr/share/luajit/5.1/re.lua
+}

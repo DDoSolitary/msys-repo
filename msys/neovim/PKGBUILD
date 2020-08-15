@@ -1,0 +1,33 @@
+pkgname=neovim
+pkgver=0.4.4
+pkgrel=1
+pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
+arch=(i686 x86_64)
+url=https://neovim.io
+license=(custom:neovim)
+depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv)
+makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel luajit-mpack luajit-lpeg)
+source=("https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha512sums=(ca5c2fe1784ac7b0d2117948ba2e9ae5d94e36d22ff9e0967047e1e03e605537672d85543897af335103215ad462c86962f25267d352a77d61bc3d1cafb3c183)
+
+build() {
+	mkdir -p build
+	cd build
+	cmake ../$pkgname-$pkgver \
+		-G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DENABLE_LTO=OFF
+	ninja
+}
+
+check() {
+	cd build
+	./bin/nvim --version
+	./bin/nvim --headless -u NONE -i NONE -c ':quit'
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+	install -Dm644 $pkgname-$pkgver/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+}

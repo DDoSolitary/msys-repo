@@ -1,0 +1,22 @@
+pkgname=luajit-mpack
+pkgver=1.0.8
+pkgdesc='Simple implementation of msgpack in C Lua 5.1'
+pkgrel=1
+arch=(i686 x86_64)
+url=https://github.com/libmpack/libmpack-lua
+depends=(luajit libmpack)
+makedepends=(luajit-devel libmpack-devel)
+license=(MIT)
+source=(libmpack-lua-$pkgver.tar.gz::https://github.com/libmpack/libmpack-lua/archive/$pkgver.tar.gz)
+sha512sums=(6d21cc6bbdee583a1d808742991459e4b1796f347b2f4eaa747b576f5bb1ca989123339120e43246bac859c20e6f46ac57116ce9f135157256fecbd8cf817f75)
+
+build() {
+	cd libmpack-lua-$pkgver
+	gcc -O2 -fPIC -DMPACK_USE_SYSTEM -I/usr/include -I/usr/include/luajit-2.0 -c lmpack.c -o lmpack.o
+	gcc -shared -o mpack.dll lmpack.o -lmpack -lluajit-5.1
+}
+
+package() {
+	cd libmpack-lua-$pkgver
+	install -Dm755 mpack.dll "$pkgdir"/usr/lib/luajit/5.1/mpack.dll
+}
