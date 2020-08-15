@@ -1,0 +1,13 @@
+libluv neovim
+libmpack luajit-mpack
+libtermkey neovim
+libvterm neovim
+luajit libluv
+luajit luajit-lpeg
+luajit luajit-mpack
+luajit neovim
+luajit-lpeg neovim
+luajit-mpack neovim
+msgpack-c neovim
+unibilium libtermkey
+unibilium neovim

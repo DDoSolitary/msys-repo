@@ -1,0 +1,21 @@
+on: push
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        msystem: [MSYS, MINGW32, MINGW64]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+      - env:
+          DEPLOYKEY: ${{ secrets.DEPLOYKEY }}
+          GPGKEY: ${{ secrets.GPGKEY }}
+          MSYSTEM: ${{ matrix.msystem }}
+          MSYS: winsymlinks:nativestrict
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $pacmanCmd = 'pacman -Syu --needed --noconfirm --noprogressbar base base-devel msys2-devel $MINGW_PACKAGE_PREFIX${MINGW_PACKAGE_PREFIX:+-toolchain} openssh rsync'
+          C:\msys64\usr\bin\bash.exe -l -c $pacmanCmd
+          C:\msys64\usr\bin\bash.exe -l -c $pacmanCmd
+          C:\msys64\usr\bin\bash.exe -l -c 'cd /d/a/msys-repo/msys-repo && ./build.sh'
