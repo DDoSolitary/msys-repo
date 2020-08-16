@@ -19,7 +19,7 @@ build() {
 package_libvterm() {
 	cd $pkgbase
 	make PREFIX=/usr DESTDIR="$pkgdir" install
-	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
 	rm -r "$pkgdir"/usr/{include,lib}
 }
 

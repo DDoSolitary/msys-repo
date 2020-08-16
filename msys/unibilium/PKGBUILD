@@ -22,6 +22,7 @@ check() {
 package_unibilium() {
 	cd $pkgbase-$pkgver
 	make install PREFIX=/usr DESTDIR="$pkgdir"
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
 	rm -r "$pkgdir"/usr/{include,lib}
 }
 

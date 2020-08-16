@@ -19,7 +19,8 @@ package_libtermkey() {
 	depends=(unibilium)
 
 	cd $pkgbase-$pkgver
-	make PREFIX=/usr DESTDIR="${pkgdir}" install
+	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
 	rm -r "$pkgdir"/usr/{include,lib}
 }
 
@@ -27,6 +28,6 @@ package_libtermkey-devel() {
 	depends=($pkgbase=$pkgver)
 
 	cd $pkgbase-$pkgver
-	make PREFIX=/usr DESTDIR="${pkgdir}" install
+	make PREFIX=/usr DESTDIR="$pkgdir" install
 	rm -r "$pkgdir"/usr/{bin,share}
 }

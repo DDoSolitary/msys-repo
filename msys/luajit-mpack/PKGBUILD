@@ -18,5 +18,6 @@ build() {
 
 package() {
 	cd libmpack-lua-$pkgver
-	install -Dm755 mpack.dll "$pkgdir"/usr/lib/luajit/5.1/mpack.dll
+	install -Dm755 mpack.dll -t "$pkgdir"/usr/lib/luajit/5.1
+	install -Dm644 LICENSE-MIT -t "$pkgdir"/usr/share/licenses/$pkgname
 }

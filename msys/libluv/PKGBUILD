@@ -36,6 +36,7 @@ package_libluv() {
 
 	cd luv-$pkgver-0
 	make DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE.txt -t "$pkgdir"/usr/share/licenses/$pkgbase
 	rm -r "$pkgdir"/usr/{include,lib}
 }
 

@@ -36,6 +36,7 @@ package_luajit() {
 	install -dm755 "$pkgdir"/usr/{lib,share}/luajit/5.1
 	install -Dm755 src/jit/*.lua -t "$pkgdir"/usr/share/luajit-$_pkgver/jit
 	install -Dm644 etc/luajit.1 -t "$pkgdir"/usr/share/man/man1
+	install -Dm644 COPYRIGHT -t "$pkgdir"/usr/share/licenses/$pkgbase
 }
 
 package_luajit-devel() {

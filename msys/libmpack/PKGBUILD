@@ -17,6 +17,7 @@ build() {
 package_libmpack() {
 	cd $pkgbase-$pkgver
 	make PREFIX=/usr DESTDIR="$pkgdir" install
+	install -Dm644 LICENSE-MIT -t "$pkgdir"/usr/share/licenses/$pkgbase
 	rm -r "$pkgdir"/usr/{include,lib}
 }
 

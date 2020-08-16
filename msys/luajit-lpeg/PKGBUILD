@@ -26,6 +26,7 @@ build() {
 
 package() {
 	cd lpeg-$pkgver
-	install -Dm755 lpeg.dll "$pkgdir"/usr/lib/luajit/5.1/lpeg.dll
-	install -Dm644 re.lua "$pkgdir"/usr/share/luajit/5.1/re.lua
+	install -Dm755 lpeg.dll -t "$pkgdir"/usr/lib/luajit/5.1
+	install -Dm644 re.lua -t "$pkgdir"/usr/share/luajit/5.1
+	install -Dm644 lpeg.html re.html -t "$pkgdir"/usr/share/licenses/$pkgname
 }

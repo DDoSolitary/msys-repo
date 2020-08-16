@@ -19,4 +19,5 @@ build() {
 package() {
 	cd $_realname-$pkgver
 	install -Dm755 target/release/win32yank.exe -t "$pkgdir"$MINGW_PREFIX/bin
+	install -Dm644 LICENSE -t "$pkgdir"$MINGW_PREFIX/share/licenses/$_realname
 }

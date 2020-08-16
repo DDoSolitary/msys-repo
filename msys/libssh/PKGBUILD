@@ -30,6 +30,7 @@ build() {
 package_libssh() {
 	depends=(zlib openssl)
 
+	install -Dm644 $pkgbase-$pkgver/BSD -t "$pkgdir"/usr/share/licenses/$pkgbase
 	cd build
 	make DESTDIR="$pkgdir" install
 	rm -r "$pkgdir"/usr/{include,lib}
