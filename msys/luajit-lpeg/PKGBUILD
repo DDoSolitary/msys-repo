@@ -6,6 +6,7 @@ url=http://www.inf.puc-rio.br/~roberto/lpeg
 license=(MIT)
 depends=(luajit)
 makedepends=(luajit-devel)
+groups=(luajit-modules)
 source=(http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-$pkgver.tar.gz)
 sha512sums=(110527ddf9f8e5e8a80ef0ae8847c8ba8cd2597dba3bfe2865cba9af60daafbb885f21e74231952f5ab793d021e050b482066a821c6954d52090a5eae77e9814)
 

@@ -20,6 +20,8 @@ check() {
 }
 
 package_unibilium() {
+	groups=(libraries)
+
 	cd $pkgbase-$pkgver
 	make install PREFIX=/usr DESTDIR="$pkgdir"
 	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
@@ -27,6 +29,7 @@ package_unibilium() {
 }
 
 package_unibilium-devel() {
+	groups=(development)
 	depends=($pkgbase=$pkgver)
 
 	cd $pkgbase-$pkgver

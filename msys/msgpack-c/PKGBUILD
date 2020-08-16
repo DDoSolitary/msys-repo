@@ -23,6 +23,8 @@ build() {
 }
 
 package_msgpack-c() {
+	groups=(libraries)
+
 	cd msgpack-$pkgver
 	make DESTDIR="$pkgdir" install
 	install -Dm644 LICENSE_1_0.txt -t "$pkgdir"/usr/share/licenses/$pkgbase
@@ -30,6 +32,7 @@ package_msgpack-c() {
 }
 
 package_msgpack-c-devel() {
+	groups=(development)
 	depends=($pkgbase=$pkgver)
 
 	cd msgpack-$pkgver

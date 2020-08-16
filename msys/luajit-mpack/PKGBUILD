@@ -7,6 +7,7 @@ url=https://github.com/libmpack/libmpack-lua
 depends=(luajit libmpack)
 makedepends=(luajit-devel libmpack-devel)
 license=(MIT)
+groups=(luajit-modules)
 source=(libmpack-lua-$pkgver.tar.gz::https://github.com/libmpack/libmpack-lua/archive/$pkgver.tar.gz)
 sha512sums=(6d21cc6bbdee583a1d808742991459e4b1796f347b2f4eaa747b576f5bb1ca989123339120e43246bac859c20e6f46ac57116ce9f135157256fecbd8cf817f75)
 

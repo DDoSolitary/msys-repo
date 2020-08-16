@@ -7,6 +7,7 @@ url=https://neovim.io
 license=(custom:neovim)
 depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv)
 makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel luajit-mpack luajit-lpeg)
+groups=(editors)
 source=("https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
 sha512sums=(ca5c2fe1784ac7b0d2117948ba2e9ae5d94e36d22ff9e0967047e1e03e605537672d85543897af335103215ad462c86962f25267d352a77d61bc3d1cafb3c183)
 

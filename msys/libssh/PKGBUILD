@@ -28,6 +28,7 @@ build() {
 }
 
 package_libssh() {
+	groups=(libraries)
 	depends=(zlib openssl)
 
 	install -Dm644 $pkgbase-$pkgver/BSD -t "$pkgdir"/usr/share/licenses/$pkgbase
@@ -37,6 +38,7 @@ package_libssh() {
 }
 
 package_libssh-devel() {
+	groups=(development)
 	depends=($pkgbase=$pkgver)
 
 	cd build

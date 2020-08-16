@@ -17,6 +17,8 @@ build() {
 }
 
 package_libvterm() {
+	groups=(libraries)
+
 	cd $pkgbase
 	make PREFIX=/usr DESTDIR="$pkgdir" install
 	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
@@ -24,6 +26,7 @@ package_libvterm() {
 }
 
 package_libvterm-devel() {
+	groups=(development)
 	depends=($pkgbase=$pkgver)
 
 	cd $pkgbase

@@ -32,6 +32,7 @@ build() {
 }
 
 package_libluv() {
+	groups=(libraries)
 	depends=(luajit libuv)
 
 	cd luv-$pkgver-0
@@ -41,6 +42,7 @@ package_libluv() {
 }
 
 package_libluv-devel() {
+	groups=(development)
 	depends=($pkgbase=$pkgver)
 
 	cd luv-$pkgver-0
