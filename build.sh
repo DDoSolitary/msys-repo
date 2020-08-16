@@ -41,6 +41,18 @@ else
 	cd mingw
 fi
 
+for i in $(cat gpg-keyids); do
+	set +e
+	for j in $(seq 10); do
+		gpg --keyserver keyserver.ubuntu.com --recv-keys "$i" \
+			|| gpg --keyserver pool.sks-keyservers.net --recv-keys "$i" \
+			&& break
+		if [ "$j" == "10" ]; then exit 1; fi
+		sleep 1
+	done
+	set -e
+done
+
 tmp1="$(mktemp)"
 tmp2="$(mktemp)"
 tsort build-order >> "$tmp1"
