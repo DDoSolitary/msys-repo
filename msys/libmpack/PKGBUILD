@@ -26,6 +26,7 @@ package_libmpack() {
 package_libmpack-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='libmpack headers and libraries'
 
 	cd $pkgbase-$pkgver
 	make PREFIX=/usr DESTDIR="$pkgdir" install

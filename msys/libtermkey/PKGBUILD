@@ -28,6 +28,7 @@ package_libtermkey() {
 package_libtermkey-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='libtermkey headers and libraries'
 
 	cd $pkgbase-$pkgver
 	make PREFIX=/usr DESTDIR="$pkgdir" install

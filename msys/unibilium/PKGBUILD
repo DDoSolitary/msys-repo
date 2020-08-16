@@ -31,6 +31,7 @@ package_unibilium() {
 package_unibilium-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='unibilium headers and libraries'
 
 	cd $pkgbase-$pkgver
 	make install PREFIX=/usr DESTDIR="$pkgdir"

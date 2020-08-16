@@ -44,6 +44,7 @@ package_libluv() {
 package_libluv-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='libluv headers and libraries'
 
 	cd luv-$pkgver-0
 	make DESTDIR="$pkgdir" install

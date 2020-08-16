@@ -42,6 +42,7 @@ package_luajit() {
 package_luajit-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='luajit headers and libraries'
 
 	cd LuaJIT-$_pkgver
 	install -Dm644 src/{lua.h,lualib.h,lauxlib.h,luaconf.h,lua.hpp,luajit.h} -t "$pkgdir"/usr/include/luajit-${_pkgver%.*}

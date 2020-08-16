@@ -34,6 +34,7 @@ package_msgpack-c() {
 package_msgpack-c-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='msgpack-c headers and libraries'
 
 	cd msgpack-$pkgver
 	make DESTDIR="$pkgdir" install

@@ -28,6 +28,7 @@ package_libvterm() {
 package_libvterm-devel() {
 	groups=(development)
 	depends=($pkgbase=$pkgver)
+	pkgdesc='libvterm headers and libraries'
 
 	cd $pkgbase
 	make PREFIX=/usr DESTDIR="$pkgdir" install
