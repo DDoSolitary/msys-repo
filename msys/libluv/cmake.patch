@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3230fdd..035d773 100644
+index 3230fdd..1d0a1ec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -106,7 +106,7 @@ else (LUA)
@@ -18,7 +18,7 @@ index 3230fdd..035d773 100644
 -  set_target_properties(libluv PROPERTIES PREFIX "")
    set_target_properties(libluv
 -    PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR})
-+  PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR} OUTPUT_NAME luv)
++    PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR} OUTPUT_NAME luv)
    list(APPEND ACTIVE_TARGETS "libluv")
  endif (BUILD_SHARED_LIBS)
  

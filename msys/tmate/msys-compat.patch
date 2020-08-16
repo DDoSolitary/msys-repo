@@ -26,29 +26,19 @@ index e3362ba8..a30825a0 100644
  
  	},
  
-diff --git a/server-client.c b/server-client.c
-index 21cccc85..3d079d0c 100644
---- a/server-client.c
-+++ b/server-client.c
-@@ -1262,7 +1262,7 @@ server_client_dispatch_identify(struct client *c, struct imsg *imsg)
- 		return;
- 	c->flags |= CLIENT_IDENTIFIED;
- 
--#ifdef __CYGWIN__
-+#if defined(__CYGWIN__) || defined(__MSYS__)
- 	c->fd = open(c->ttyname, O_RDWR|O_NOCTTY);
- #endif
- 
 diff --git a/tmux.c b/tmux.c
-index 53b984d7..7682eb0b 100644
+index 53b984d7..0c0da3ce 100644
 --- a/tmux.c
 +++ b/tmux.c
-@@ -150,7 +150,7 @@ make_label(const char *label)
+@@ -150,7 +150,11 @@ make_label(const char *label)
  		errno = ENOTDIR;
  		goto fail;
  	}
--	if (sb.st_uid != uid || (sb.st_mode & S_IRWXO) != 0) {
++#ifdef __CYGWIN__
 +	if (sb.st_uid != uid) {
++#else
+ 	if (sb.st_uid != uid || (sb.st_mode & S_IRWXO) != 0) {
++#endif
  		errno = EACCES;
  		goto fail;
  	}

@@ -42,19 +42,19 @@ index f56465d..51cc07d 100644
    # Mixed mode is not supported on Windows. And static mode doesn't work well.
    # C modules cannot be loaded, because they bind to lua51.dll.
 diff --git a/src/lj_arch.h b/src/lj_arch.h
-index c8d7138..3a0a2da 100644
+index c8d7138..600d4d1 100644
 --- a/src/lj_arch.h
 +++ b/src/lj_arch.h
-@@ -79,6 +79,9 @@
- #elif defined(__CYGWIN__)
- #define LJ_TARGET_CYGWIN	1
+@@ -76,6 +76,9 @@
+ #define LUAJIT_OS	LUAJIT_OS_BSD
+ #elif (defined(__sun__) && defined(__svr4__)) || defined(__HAIKU__)
  #define LUAJIT_OS	LUAJIT_OS_POSIX
 +#elif defined(__MSYS__)
 +#define LJ_TARGET_MSYS	1
 +#define LUAJIT_OS	LUAJIT_OS_POSIX
- #else
- #define LUAJIT_OS	LUAJIT_OS_OTHER
- #endif
+ #elif defined(__CYGWIN__)
+ #define LJ_TARGET_CYGWIN	1
+ #define LUAJIT_OS	LUAJIT_OS_POSIX
 @@ -146,7 +149,7 @@
  #define LJ_ARCH_NAME		"x86"
  #define LJ_ARCH_BITS		32
@@ -112,7 +112,7 @@ index 6142659..e6ee49f 100644
        return name;
  #endif
 diff --git a/src/luaconf.h b/src/luaconf.h
-index c2d29d9..01936ec 100644
+index c2d29d9..1e23ba4 100644
 --- a/src/luaconf.h
 +++ b/src/luaconf.h
 @@ -36,7 +36,7 @@
@@ -124,26 +124,37 @@ index c2d29d9..01936ec 100644
  #define LUA_LJDIR	"/luajit-2.1.0-beta3/"
  
  #ifdef LUA_ROOT
-@@ -44,7 +44,7 @@
+@@ -44,7 +44,11 @@
  #define LUA_RLDIR	LUA_ROOT "/share" LUA_LUADIR
  #define LUA_RCDIR	LUA_ROOT "/" LUA_MULTILIB LUA_LUADIR
  #define LUA_RLPATH	";" LUA_RLDIR "?.lua;" LUA_RLDIR "?/init.lua"
--#define LUA_RCPATH	";" LUA_RCDIR "?.so"
++#ifdef __CYGWIN__
 +#define LUA_RCPATH	";" LUA_RCDIR "?.dll"
++#else
+ #define LUA_RCPATH	";" LUA_RCDIR "?.so"
++#endif
  #else
  #define LUA_JROOT	LUA_LROOT
  #define LUA_RLPATH
-@@ -55,11 +55,11 @@
+@@ -55,12 +59,21 @@
  #define LUA_LLDIR	LUA_LROOT "/share" LUA_LUADIR
  #define LUA_LCDIR	LUA_LROOT "/" LUA_LMULTILIB LUA_LUADIR
  #define LUA_LLPATH	";" LUA_LLDIR "?.lua;" LUA_LLDIR "?/init.lua"
--#define LUA_LCPATH1	";" LUA_LCDIR "?.so"
++#ifdef __CYGWIN__
 +#define LUA_LCPATH1	";" LUA_LCDIR "?.dll"
++#define LUA_LCPATH2	";" LUA_LCDIR "loadall.dll"
++#else
+ #define LUA_LCPATH1	";" LUA_LCDIR "?.so"
  #define LUA_LCPATH2	";" LUA_LCDIR "loadall.so"
++#endif
  
  #define LUA_PATH_DEFAULT	"./?.lua" LUA_JPATH LUA_LLPATH LUA_RLPATH
--#define LUA_CPATH_DEFAULT	"./?.so" LUA_LCPATH1 LUA_RCPATH LUA_LCPATH2
++#ifdef __CYGWIN__
 +#define LUA_CPATH_DEFAULT	"./?.dll" LUA_LCPATH1 LUA_RCPATH LUA_LCPATH2
++#else
+ #define LUA_CPATH_DEFAULT	"./?.so" LUA_LCPATH1 LUA_RCPATH LUA_LCPATH2
  #endif
++#endif
  
  /* Environment variable names for path overrides and initialization code. */
+ #define LUA_PATH	"LUA_PATH"
