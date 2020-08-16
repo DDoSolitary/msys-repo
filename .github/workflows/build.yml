@@ -12,7 +12,7 @@ jobs:
           DEPLOYKEY: ${{ secrets.DEPLOYKEY }}
           GPGKEY: ${{ secrets.GPGKEY }}
           MSYSTEM: ${{ matrix.msystem }}
-          MSYS: winsymlinks:nativestrict
+          MSYS: winsymlinks:lnk
         run: |
           $ErrorActionPreference = 'Continue'
           $pacmanCmd = 'pacman -Syu --needed --noconfirm --noprogressbar base base-devel msys2-devel $MINGW_PACKAGE_PREFIX${MINGW_PACKAGE_PREFIX:+-toolchain} openssh rsync'

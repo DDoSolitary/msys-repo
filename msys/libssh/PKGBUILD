@@ -1,0 +1,49 @@
+pkgbase=libssh
+pkgname=($pkgbase $pkgbase-devel $pkgbase-docs)
+pkgver=0.9.4
+pkgrel=1
+pkgdesc='Library for accessing ssh client services through C libraries'
+url=https://www.libssh.org/
+license=(LGPL)
+arch=(i686 x86_64)
+makedepends=(cmake doxygen python zlib-devel openssl-devel)
+source=(https://www.libssh.org/files/${pkgver%.*}/$pkgbase-$pkgver.tar.xz{,.asc})
+sha512sums=(
+	38705c19c293ea5e6d286d22eb17021dbe58d88c1e647b699933aa0db9ca1174d43d1ff76c1a1b17bf2cc1a8297ec02f1a67dd9e969676dd69cf6fbdae9bc8d4
+	SKIP
+)
+validpgpkeys=(8DFF53E18F2ABC8D8F3C92237EE0FC4DCC014E3D)
+
+build() {
+	mkdir -p build
+	cd build
+	cmake ../$pkgbase-$pkgver \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DWITH_GSSAPI=OFF \
+		-DWITH_NACL=OFF \
+		-DWITH_STACK_CLASH_PROTECTION=OFF
+	make
+	make docs
+}
+
+package_libssh() {
+	depends=(zlib openssl)
+
+	cd build
+	make DESTDIR="$pkgdir" install
+	rm -r "$pkgdir"/usr/{include,lib}
+}
+
+package_libssh-devel() {
+	depends=($pkgbase=$pkgver)
+
+	cd build
+	make DESTDIR="$pkgdir" install
+	rm -r "$pkgdir"/usr/bin
+}
+
+package_libssh-docs() {
+	mkdir -p "$pkgdir"/usr/share/doc/$pkgbase
+	cp -r build/doc/html "$pkgdir"/usr/share/doc/$pkgbase/
+}

@@ -1,5 +1,6 @@
 libluv neovim
 libmpack luajit-mpack
+libssh tmate
 libtermkey neovim
 libvterm neovim
 luajit libluv
@@ -9,5 +10,6 @@ luajit neovim
 luajit-lpeg neovim
 luajit-mpack neovim
 msgpack-c neovim
+msgpack-c tmate
 unibilium libtermkey
 unibilium neovim
