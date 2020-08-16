@@ -25,9 +25,12 @@ cat >> /etc/makepkg.conf <<- EOF
 EOF
 
 repo_name=${MSYSTEM,,}-ddosolitary
-mkdir ~/repo
-touch ~/repo/$repo_name.db
-gpg --detach-sign --output ~/repo/$repo_name.db{.sig,}
+rsync_path=ddosolitary@web.sourceforge.net:/home/project-web/msys-repo/htdocs/${MSYSTEM,,}/
+rsync -avJ -e ssh $rsync_path ~/repo/
+if [ ! -f ~/repo/$repo_name.db ]; then
+	touch ~/repo/$repo_name.db
+	gpg --detach-sign --output ~/repo/$repo_name.db{.sig,}
+fi
 cat >> /etc/pacman.conf <<- EOF
 	[$repo_name]
 	Server = file://$HOME/repo
@@ -88,6 +91,6 @@ done
 
 cat "$tmp_res"
 if (( $build_err == 0 )); then
-	rsync -avJ -e ssh ~/repo/ ddosolitary@web.sourceforge.net:/home/project-web/msys-repo/htdocs/${MSYSTEM,,}/
+	rsync -avJ -e ssh ~/repo/ $rsync_path
 fi
 exit $build_err
