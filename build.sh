@@ -91,6 +91,6 @@ done
 
 cat "$tmp_res"
 if (( $build_err == 0 )); then
-	rsync -avJ -e ssh ~/repo/ $rsync_path
+	rsync -avJ --delete -e ssh ~/repo/ $rsync_path
 fi
 exit $build_err
