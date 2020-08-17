@@ -1,6 +1,6 @@
 pkgname=neovim
 pkgver=0.4.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
 arch=(i686 x86_64)
 url=https://neovim.io
@@ -8,8 +8,17 @@ license=(custom:neovim)
 depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv)
 makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel luajit-mpack luajit-lpeg)
 groups=(editors)
-source=("https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha512sums=(ca5c2fe1784ac7b0d2117948ba2e9ae5d94e36d22ff9e0967047e1e03e605537672d85543897af335103215ad462c86962f25267d352a77d61bc3d1cafb3c183)
+source=(
+	https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz
+	spawn-pipe.patch)
+sha512sums=(
+	ca5c2fe1784ac7b0d2117948ba2e9ae5d94e36d22ff9e0967047e1e03e605537672d85543897af335103215ad462c86962f25267d352a77d61bc3d1cafb3c183
+	a8184342261f8bf1140c0a6ee1d7e68709a2384eff599fc94ba56eea256ed218fb5fba03918ff010d7ecc7795a270ddf95ea569ce0005b79355e336ce56cf395)
+
+prepare() {
+	cd $pkgname-$pkgver
+	patch -Np1 -i "$srcdir"/spawn-pipe.patch
+}
 
 build() {
 	mkdir -p build

@@ -1,0 +1,66 @@
+diff --git a/src/nvim/event/libuv_process.c b/src/nvim/event/libuv_process.c
+index 63efee59a..2fbfd849b 100644
+--- a/src/nvim/event/libuv_process.c
++++ b/src/nvim/event/libuv_process.c
+@@ -49,16 +49,37 @@ int libuv_process_spawn(LibuvProcess *uvproc)
+   uvproc->uvstdio[2].flags = UV_IGNORE;
+   uvproc->uv.data = proc;
+ 
++  int fds[2];
++
+   if (!proc->in.closed) {
++#ifdef __CYGWIN__
++    uvproc->uvstdio[0].flags = UV_INHERIT_FD | UV_READABLE_PIPE;
++    if (pipe2(fds, O_CLOEXEC)) {
++      ELOG("pipe2 failed: %s", strerror(errno));
++      return -errno;
++    }
++    uvproc->uvstdio[0].data.fd = fds[0];
++    uv_pipe_open(&proc->in.uv.pipe, fds[1]);
++#else
+     uvproc->uvstdio[0].flags = UV_CREATE_PIPE | UV_READABLE_PIPE;
+ #ifdef WIN32
+     uvproc->uvstdio[0].flags |= UV_OVERLAPPED_PIPE;
+ #endif
+     uvproc->uvstdio[0].data.stream = STRUCT_CAST(uv_stream_t,
+                                                  &proc->in.uv.pipe);
++#endif
+   }
+ 
+   if (!proc->out.closed) {
++#ifdef __CYGWIN__
++    uvproc->uvstdio[1].flags = UV_INHERIT_FD | UV_WRITABLE_PIPE;
++    if (pipe2(fds, O_CLOEXEC)) {
++      ELOG("pipe2 failed: %s", strerror(errno));
++      return -errno;
++    }
++    uvproc->uvstdio[1].data.fd = fds[1];
++    uv_pipe_open(&proc->out.uv.pipe, fds[0]);
++#else
+     uvproc->uvstdio[1].flags = UV_CREATE_PIPE | UV_WRITABLE_PIPE;
+ #ifdef WIN32
+     // pipe must be readable for IOCP to work.
+@@ -66,12 +87,23 @@ int libuv_process_spawn(LibuvProcess *uvproc)
+ #endif
+     uvproc->uvstdio[1].data.stream = STRUCT_CAST(uv_stream_t,
+                                                  &proc->out.uv.pipe);
++#endif
+   }
+ 
+   if (!proc->err.closed) {
++#ifdef __CYGWIN__
++    uvproc->uvstdio[2].flags = UV_INHERIT_FD | UV_WRITABLE_PIPE;
++    if (pipe2(fds, O_CLOEXEC)) {
++      ELOG("pipe2 failed: %s", strerror(errno));
++      return -errno;
++    }
++    uvproc->uvstdio[2].data.fd = fds[1];
++    uv_pipe_open(&proc->err.uv.pipe, fds[0]);
++#else
+     uvproc->uvstdio[2].flags = UV_CREATE_PIPE | UV_WRITABLE_PIPE;
+     uvproc->uvstdio[2].data.stream = STRUCT_CAST(uv_stream_t,
+                                                  &proc->err.uv.pipe);
++#endif
+   }
+ 
+   int status;
