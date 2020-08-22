@@ -1,0 +1,26 @@
+_pkgname=dein.vim
+pkgname=vim-dein-git
+pkgver=2.0.r112.g21a5c41
+pkgrel=1
+pkgdesc='dark powered Vim/Neovim plugin manager'
+arch=(any)
+url=https://github.com/Shougo/dein.vim
+license=(MIT)
+depends=()
+makedepends=(git)
+source=(git+https://github.com/Shougo/dein.vim)
+sha512sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname
+	sharepath="$pkgdir"/usr/share
+	vimpath="$sharepath"/vim/vimfiles
+	install -Dm 644 doc/dein.txt -t "$vimpath"/doc
+	cp -rp autoload "$vimpath"
+	install -Dm 644 LICENSE -t "$sharepath"/licenses/$pkgname
+}
