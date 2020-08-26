@@ -2,7 +2,7 @@ _realname=iverilog
 pkgbase=mingw-w64-$_realname
 pkgname=$MINGW_PACKAGE_PREFIX-$_realname
 pkgver=10.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Icarus Verilog compiler and simulation tool'
 arch=(i686 x86_64)
 url=http://iverilog.icarus.com/
@@ -21,11 +21,11 @@ prepare() {
 build() {
 	cd $_realname
 	export CFLAGS="$CFLAGS -fcommon"
-	./configure --prefix=/usr
+	./configure --prefix=$MINGW_PREFIX
 	make
 }
 
 package() {
 	cd $_realname
-	make -j1 prefix="$pkgdir"/usr install
+	make -j1 prefix="$pkgdir"$MINGW_PREFIX install
 }
