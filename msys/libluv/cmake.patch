@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c09edbf..cecd98f 100644
+index c09edbf..5aea237 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -106,12 +106,8 @@ else (LUA)
@@ -17,16 +17,18 @@ index c09edbf..cecd98f 100644
        if(NOT LUAJIT_INCLUDE_DIR)
          message( FATAL_ERROR "Failed to find LuaJIT headers. Variable `LUAJIT_INCLUDE_DIR' expected to be defined.")
        endif()
-@@ -196,7 +192,7 @@ if (BUILD_SHARED_LIBS)
+@@ -194,9 +190,8 @@ if (BUILD_STATIC_LIBS)
+ endif (BUILD_STATIC_LIBS)
+ if (BUILD_SHARED_LIBS)
    add_library(libluv SHARED src/luv.c)
-   set_target_properties(libluv PROPERTIES PREFIX "")
+-  set_target_properties(libluv PROPERTIES PREFIX "")
    set_target_properties(libluv
 -    PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR})
 +    PROPERTIES VERSION ${LUV_VERSION} SOVERSION ${LUV_VERSION_MAJOR} OUTPUT_NAME luv)
    if(APPLE)
      set_target_properties(libluv
        PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-@@ -300,6 +296,7 @@ if (CMAKE_INSTALL_PREFIX)
+@@ -300,6 +295,7 @@ if (CMAKE_INSTALL_PREFIX)
    endif (BUILD_STATIC_LIBS)
    if (BUILD_SHARED_LIBS)
      install(TARGETS libluv
