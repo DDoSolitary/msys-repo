@@ -1,0 +1,42 @@
+_pkgname=oh-my-zsh
+_gitname=ohmyzsh
+pkgname=oh-my-zsh-git
+pkgver=r6008.12669f29f
+pkgrel=1
+pkgdesc='A community-driven framework for managing your zsh configuration'
+arch=(any)
+url=https://github.com/ohmyzsh/ohmyzsh
+license=(MIT)
+depends=(zsh)
+makedepends=(git)
+optdepends=(
+	'ruby: for some plugin functionality'
+	'python: for some plugin functionality'
+	'git: most themes use git (highly recommended but still optional)')
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(
+	git+$url.git
+	0001-zshrc.patch)
+sha512sums=(
+	SKIP
+	9fd366eb3b373008425de7f026cb731c53615653bbdce560fca90018f6fc3d4cd0654eb952b754429534dcf74bd905eac29624e43a3becd83b13347327a14160)
+
+pkgver() {
+	cd $_gitname
+	printf r%s.%s $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+prepare() {
+	cd $_gitname
+	cp templates/zshrc.zsh-template zshrc
+	patch -Np1 -i "$srcdir"/0001-zshrc.patch
+}
+
+package() {
+	cd $_gitname
+	find -type f ! -path './.*' -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/$_pkgname/{} \;
+	install -dm755 "$pkgdir"/usr/share/licenses/$_pkgname
+	ln -s /usr/share/$_pkgname/LICENSE.txt "$pkgdir"/usr/share/licenses/$_pkgname/LICENSE.txt
+}
