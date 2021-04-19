@@ -1,0 +1,24 @@
+_pkgname=zsh-completions
+pkgname=zsh-completions-git
+pkgver=0.32.0.r67.g901a787
+pkgrel=1
+pkgdesc='Additional completion definitions for Zsh'
+arch=(any)
+url=https://github.com/zsh-users/zsh-completions
+license=(custom:zsh)
+depends=(zsh)
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname/src
+	find -type f -exec install -Dm644 {} "$pkgdir"/usr/share/zsh/site-functions/{} \;
+}

@@ -1,0 +1,40 @@
+_pkgname=zsh-theme-powerlevel10k
+_gitname=powerlevel10k
+pkgname=zsh-theme-powerlevel10k-git
+pkgver=1.14.6.r19.g48ff2e8
+pkgrel=1
+pkgdesc='Powerlevel10k is a theme for Zsh. It emphasizes speed, flexibility and out-of-the-box experience.'
+arch=(any)
+url=https://github.com/romkatv/powerlevel10k
+license=(MIT)
+depends=(zsh)
+makedepends=(git cmake)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_gitname
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd $_gitname/gitstatus
+	./build -w
+}
+
+package() {
+	cd $_gitname
+	_installdir="$pkgdir"/usr/share/$_pkgname
+	find -type f -exec install -Dm644 {} "$_installdir"/{} \;
+	rm -r \
+		"$_installdir"/{.gitattributes,.gitignore,Makefile} \
+		"$_installdir"/gitstatus/{.clang-format,.gitignore,.gitattributes,.vscode} \
+		"$_installdir"/gitstatus/{build,deps,mbuild,src,Makefile} \
+		"$_installdir"/gitstatus/usrbin/.gitkeep
+	cd "$_installdir"
+	for file in *.zsh-theme internal/*.zsh gitstatus/*.zsh gitstatus/install; do
+		zsh -fc "emulate zsh -o no_aliases && zcompile -R -- $file.zwc $file"
+	done
+}
