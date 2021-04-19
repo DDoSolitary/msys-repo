@@ -13,3 +13,4 @@ msgpack-c neovim
 msgpack-c tmate
 unibilium libtermkey
 unibilium neovim
+vim-airline-git vim-airline-themes-git

@@ -1,0 +1,26 @@
+_pkgname=vim-airline-themes
+pkgname=vim-airline-themes-git
+pkgver=r1426.0f9995d
+pkgrel=1
+pkgdesc='A collection of themes for vim-airline'
+arch=(any)
+url=https://github.com/vim-airline/vim-airline-themes
+license=(MIT)
+depends=(vim-airline)
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	printf r%s.%s $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+package() {
+	cd $_pkgname
+	find autoload plugin -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/{} \;
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$_pkgname/LICENSE
+}

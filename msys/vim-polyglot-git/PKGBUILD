@@ -1,0 +1,25 @@
+_pkgname=vim-polyglot
+pkgname=vim-polyglot-git
+pkgver=v4.17.0.r24.g730dcb02
+pkgrel=1
+arch=(any)
+pkgdesc='A solid language pack for Vim'
+url=https://github.com/sheerun/vim-polyglot
+license=(MIT)
+depends=()
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/^foo-//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname
+	find after autoload compiler ctags extras ftdetect ftplugin indent syntax -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/pack/plugins/start/$_pkgname/{} \;
+}

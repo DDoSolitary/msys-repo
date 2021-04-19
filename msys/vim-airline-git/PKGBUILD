@@ -1,0 +1,26 @@
+_pkgname=vim-airline
+pkgname=vim-airline-git
+pkgver=0.11.r370.g07ab201a
+pkgrel=1
+pkgdesc="A lean & mean statusline for vim that's light as air"
+arch=(any)
+url=https://github.com/vim-airline/vim-airline
+license=(MIT)
+depends=()
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname
+	find autoload doc plugin t -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/{} \;
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$_pkgname/LICENSE
+}

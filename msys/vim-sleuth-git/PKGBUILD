@@ -1,0 +1,25 @@
+_pkgname=vim-sleuth
+pkgname=vim-sleuth-git
+pkgver=1.2.r0.g38bd401
+pkgrel=1
+pkgdesc='Heuristically set buffer options'
+arch=(any)
+url=https://github.com/tpope/vim-sleuth
+license=(custom:vim)
+depends=(vim)
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname
+	find doc plugin -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/{} \;
+}

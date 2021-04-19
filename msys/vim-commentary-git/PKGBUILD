@@ -1,0 +1,25 @@
+_pkgname=vim-commentary
+pkgname=vim-commentary-git
+pkgver=1.3.r18.g349340d
+pkgrel=1
+pkgdesc='Comment stuff out'
+arch=(any)
+url=https://github.com/tpope/vim-commentary
+license=(custom:vim)
+depends=(vim)
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd $_pkgname
+	find doc plugin -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/{} \;
+}

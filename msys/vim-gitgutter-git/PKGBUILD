@@ -1,0 +1,26 @@
+_pkgname=vim-gitgutter
+pkgname=vim-gitgutter-git
+pkgver=r748.9756e95
+pkgrel=1
+arch=(any)
+pkgdesc="A Vim plugin which shows a git diff in the 'gutter'"
+url=https://github.com/airblade/vim-gitgutter
+license=(MIT)
+depends=(git)
+makedepends=(git)
+conflicts=($_pkgname)
+provides=($_pkgname)
+source=(git+$url.git)
+md5sums=(SKIP)
+
+pkgver() {
+	cd $_pkgname
+	printf r%s.%s $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+package() {
+	cd $_pkgname
+	find autoload doc plugin -type f -exec \
+		install -Dm644 {} "$pkgdir"/usr/share/vim/vimfiles/{} \;
+	install -Dm644 LICENCE "$pkgdir"/usr/share/licenses/$_pkgname/LICENSE
+}
