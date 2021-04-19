@@ -1,7 +1,7 @@
 _pkgname=zsh-syntax-highlighting
 pkgname=zsh-syntax-highlighting-git
 pkgver=0.8.0.alpha1.pre.redrawhook.r50.gebef4e5
-pkgrel=1
+pkgrel=2
 pkgdesc='Fish shell like syntax highlighting for Zsh'
 arch=(any)
 url=https://github.com/zsh-users/zsh-syntax-highlighting
@@ -22,7 +22,6 @@ package() {
 	cd $_pkgname
 	make PREFIX=/usr SHARE_DIR="$pkgdir"/usr/share/zsh/plugins/$_pkgname DESTDIR="$pkgdir" install
 	ln -s $_pkgname.zsh "$pkgdir"/usr/share/zsh/plugins/$_pkgname/$_pkgname.plugin.zsh
-	install -Dm644 $_pkgname.zsh -t "$pkgdir"/usr/share/zsh/plugins/$_pkgname
 	install -dm755 "$pkgdir"/usr/share/licenses/$_pkgname
 	ln -s /usr/share/doc/$_pkgname/COPYING.md "$pkgdir"/usr/share/licenses/$_pkgname/COPYING
 }
