@@ -1,6 +1,6 @@
 pkgname=neovim
-pkgver=0.4.4
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
 arch=(i686 x86_64)
 url=https://neovim.io
@@ -12,8 +12,8 @@ source=(
 	https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz
 	spawn-pipe.patch)
 sha512sums=(
-	ca5c2fe1784ac7b0d2117948ba2e9ae5d94e36d22ff9e0967047e1e03e605537672d85543897af335103215ad462c86962f25267d352a77d61bc3d1cafb3c183
-	a8184342261f8bf1140c0a6ee1d7e68709a2384eff599fc94ba56eea256ed218fb5fba03918ff010d7ecc7795a270ddf95ea569ce0005b79355e336ce56cf395)
+	f6649f804faabb4104d3b28283932e40358c23990961f4ca7b380089318da312e59242746cee06387f4d881dd6514abbfec79c4063482383adfb4106e9e7a3a4
+	960651aec171ac073988bb1b99c66f2ceb284484d697c13807a32b55ab24a1b9590890136062e69bf9c2f11ad89dea89987a56416b35356549fe9bae65623bc2)
 
 prepare() {
 	cd $pkgname-$pkgver
@@ -27,7 +27,8 @@ build() {
 		-G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DENABLE_LTO=OFF
+		-DENABLE_LTO=OFF \
+		-DUSE_BUNDLED=OFF
 	ninja
 }
 

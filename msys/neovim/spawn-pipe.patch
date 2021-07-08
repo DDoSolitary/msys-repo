@@ -1,10 +1,10 @@
 diff --git a/src/nvim/event/libuv_process.c b/src/nvim/event/libuv_process.c
-index 63efee59a..2fbfd849b 100644
+index c02f73043..491a944ed 100644
 --- a/src/nvim/event/libuv_process.c
 +++ b/src/nvim/event/libuv_process.c
-@@ -49,16 +49,37 @@ int libuv_process_spawn(LibuvProcess *uvproc)
-   uvproc->uvstdio[2].flags = UV_IGNORE;
-   uvproc->uv.data = proc;
+@@ -54,16 +54,37 @@ int libuv_process_spawn(LibuvProcess *uvproc)
+     uvproc->uvopts.env = NULL;
+   }
  
 +  int fds[2];
 +
@@ -20,7 +20,7 @@ index 63efee59a..2fbfd849b 100644
 +#else
      uvproc->uvstdio[0].flags = UV_CREATE_PIPE | UV_READABLE_PIPE;
  #ifdef WIN32
-     uvproc->uvstdio[0].flags |= UV_OVERLAPPED_PIPE;
+     uvproc->uvstdio[0].flags |= proc->overlapped ? UV_OVERLAPPED_PIPE : 0;
  #endif
      uvproc->uvstdio[0].data.stream = STRUCT_CAST(uv_stream_t,
                                                   &proc->in.uv.pipe);
@@ -39,8 +39,8 @@ index 63efee59a..2fbfd849b 100644
 +#else
      uvproc->uvstdio[1].flags = UV_CREATE_PIPE | UV_WRITABLE_PIPE;
  #ifdef WIN32
-     // pipe must be readable for IOCP to work.
-@@ -66,12 +87,23 @@ int libuv_process_spawn(LibuvProcess *uvproc)
+     // pipe must be readable for IOCP to work on Windows.
+@@ -72,12 +93,23 @@ int libuv_process_spawn(LibuvProcess *uvproc)
  #endif
      uvproc->uvstdio[1].data.stream = STRUCT_CAST(uv_stream_t,
                                                   &proc->out.uv.pipe);
