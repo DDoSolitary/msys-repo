@@ -11,6 +11,7 @@ luajit-lpeg neovim
 luajit-mpack neovim
 msgpack-c neovim
 msgpack-c tmate
+tree-sitter neovim
 unibilium libtermkey
 unibilium neovim
 vim-airline-git vim-airline-themes-git

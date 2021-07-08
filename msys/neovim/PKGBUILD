@@ -6,7 +6,7 @@ arch=(i686 x86_64)
 url=https://neovim.io
 license=(custom:neovim)
 depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv)
-makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel luajit-mpack luajit-lpeg)
+makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel tree-sitter-devel luajit-mpack luajit-lpeg)
 groups=(editors)
 source=(
 	https://github.com/neovim/$pkgname/archive/v$pkgver/$pkgname-$pkgver.tar.gz

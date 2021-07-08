@@ -1,0 +1,47 @@
+pkgbase=tree-sitter
+pkgname=($pkgbase $pkgbase-devel)
+pkgver=0.20.0
+pkgrel=1
+pkgdesc='An incremental parsing system for programming tools'
+arch=(i686 x86_64)
+url=https://github.com/tree-sitter/tree-sitter
+license=(MIT)
+source=(
+	https://github.com/tree-sitter/$pkgbase/archive/v$pkgver.tar.gz
+	1247.patch)
+sha512sums=(
+	a51fa0af45a6a99bb74ff53c15a4d7939eb24c6720e65ec7a96f74ffbce54801f14539e071ec6a4891dae778d7dea5edcecc6dd57716cc70a891c9e6cfa55013
+	6f4e0a0bcc6ba2dd9bc0c3dd51bb3071f68e0e800f1a713c061beca8a9d31ce8d097ed4406c2e67b955c8fcffba6b257cf522d07526e2bd6be348d0634356da5)
+
+prepare() {
+	cd $pkgbase-$pkgver
+	patch -Np1 -i "$srcdir"/1247.patch
+}
+
+build() {
+	cd $pkgbase-$pkgver
+	make PREFIX=/usr LDFLAGS=-no-undefined
+	# Rust is not available
+	#cd cli
+	#cargo build --release --locked --all-features
+}
+
+package_tree-sitter() {
+	groups=(libraries)
+
+	cd $pkgbase-$pkgver
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	rm -r "$pkgdir"/usr/{include,lib}
+	#install -Dm755 target/release/$pkgbase -t "$pkgdir"/usr/bin
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgbase
+}
+
+package_tree-sitter-devel() {
+	groups=(development)
+	depends=($pkgbase=$pkgver)
+	pkgdesc='tree-sitter headers and libraries'
+
+	cd $pkgbase-$pkgver
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+	rm -r "$pkgdir"/usr/bin
+}
