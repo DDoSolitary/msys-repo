@@ -1,11 +1,11 @@
 pkgname=neovim
 pkgver=0.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
 arch=(i686 x86_64)
 url=https://neovim.io
 license=(custom:neovim)
-depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv)
+depends=(libtermkey libuv msgpack-c unibilium libvterm luajit libluv tree-sitter)
 makedepends=(cmake ninja gperf libtermkey-devel libuv-devel msgpack-c-devel unibilium-devel libvterm-devel luajit-devel libluv-devel tree-sitter-devel luajit-mpack luajit-lpeg)
 groups=(editors)
 source=(
