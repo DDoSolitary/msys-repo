@@ -8,6 +8,7 @@ ssh-add ~/.ssh/id_ed25519
 ssh-keyscan web.sourceforge.net > ~/.ssh/known_hosts
 chmod 600 ~/.ssh/known_hosts
 echo "$GPGKEY" | base64 -d | gpg --import
+gpg --keyserver hkps://keys.openpgp.org --refresh-keys
 unset DEPLOYKEY GPGKEY
 
 set -x
