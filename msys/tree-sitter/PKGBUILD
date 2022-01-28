@@ -1,6 +1,6 @@
 pkgbase=tree-sitter
 pkgname=($pkgbase $pkgbase-devel)
-pkgver=0.20.2
+pkgver=0.20.4
 pkgrel=1
 pkgdesc='An incremental parsing system for programming tools'
 arch=(i686 x86_64)
@@ -10,7 +10,7 @@ source=(
 	https://github.com/tree-sitter/$pkgbase/archive/v$pkgver.tar.gz
 	1247.patch)
 sha512sums=(
-	4b9a7da47b48b0003daf9af60f9d48aacf7c74d1c9e2645eafd74f62f568bc69e2fb36bb8f0c6b9f1dc85829e146786cc6bf7050ed1402167790b1552990665f
+	24554dd048c443a18b3a5372ca94d942cf7ade8835afd8837c874c65c5b15117a87430eb00a0880e220f64a421a290fe2a5aa63ca54487d9ca0507fa264a2718
 	6f4e0a0bcc6ba2dd9bc0c3dd51bb3071f68e0e800f1a713c061beca8a9d31ce8d097ed4406c2e67b955c8fcffba6b257cf522d07526e2bd6be348d0634356da5)
 
 prepare() {
