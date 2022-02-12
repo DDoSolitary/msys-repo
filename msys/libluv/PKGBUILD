@@ -1,6 +1,6 @@
 pkgbase=libluv
 pkgname=($pkgbase $pkgbase-devel)
-pkgver=1.42.0_1
+pkgver=1.43.0_0
 _pkgver=${pkgver//_/-}
 pkgrel=1
 pkgdesc='Bare libuv bindings for lua'
@@ -12,8 +12,8 @@ source=(
 	https://github.com/luvit/luv/releases/download/${_pkgver}/luv-${_pkgver}.tar.gz
 	cmake.patch)
 sha512sums=(
-	2b08b0c7e9e3bf156761f49eb5c3da0e3f486d3ca018d38fa41a038bd41aa07a3888873e8451f38069dd63464f9b2be66e30af491b46ad7b34bc304722bd4692
-	1fa210f9c87afed58090cdb09b0f2e17c12f767d3f2e54b56eb037be15fbbf17233de1c11853797bf89fe1b894d0b8c0153dfc011bab3fe1ebdeb5af8fc32c09)
+	79e6c125dcd9c8ba06ade01c067ece74c92e3af09958ce7b921bc150d376ad9ae3fc3dbf5c65e92293174ab2905b0c2aad37a11571f9606594cbd8c4972274f2
+	c4370ea9806de9d32dc527b10d95450d9b3da5673078059f4f88848fcfecea9f1940eb65a7582113ad2ee1d567d49d3a6e90f7a130739531f6962a4bdf09c699)
 
 prepare() {
 	cd luv-$_pkgver
